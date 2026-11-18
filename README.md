@@ -40,12 +40,12 @@ The ECR workflow publishes `healthcare-backend` and `healthcare-frontend` to Ama
 Before running the ECR workflow:
 
 1. Create ECR repositories named `healthcare-backend` and `healthcare-frontend` in your AWS region.
-2. Configure an AWS IAM OIDC provider for GitHub Actions and a role trusted by this GitHub repository's `main` branch. Grant it permission to push images to those ECR repositories.
-3. Add these repository variables under **GitHub Settings → Secrets and variables → Actions → Variables**:
-	- `AWSREGION`: the AWS region containing the ECR repositories.
-	- `AWS_ACCOUNT_ID`: the 12-digit AWS account ID that owns the role.
-	- `ASW_ROLE_1`: the IAM role name only, without an ARN or `role/` prefix.
+2. Create an IAM user with permission to push to those ECR repositories and generate an access key for it.
+3. Add these repository secrets under **GitHub Settings → Secrets and variables → Actions → Secrets**:
+   - `AWS_ACCESS_KEY_ID`
+   - `AWS_SECRET_ACCESS_KEY`
+   - `AWS_REGION`
 
-No long-lived AWS access key is stored in GitHub; the workflow assumes the IAM role using OIDC. Compose image references use `AWS_ACCOUNT_ID`, `AWS_REGION`, and `IMAGE_TAG`. For local builds, run `docker compose up --build`; for pulling ECR images, set those variables and authenticate Docker to ECR first.
+The access key is long-lived, so use a dedicated IAM user with only the ECR permissions it needs, rotate the key regularly, and never commit or share the values. Compose image references use `AWS_ACCOUNT_ID`, `AWS_REGION`, and `IMAGE_TAG`. For local builds, run `docker compose up --build`; for pulling ECR images, set those variables and authenticate Docker to ECR first.
 
 The tenant is identified by the `X-Tenant` header. Supported values are `tenant-a` and `tenant-b`. Tenant metadata is in the central database; patient records are stored in separate Tenant A and Tenant B databases.
