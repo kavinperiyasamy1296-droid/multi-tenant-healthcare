@@ -1,11 +1,11 @@
 name: Build and publish Docker images
 
 on:
-  push:
-    branches: main
-  
-  pull_request:
-    branches: main
+  # Automatic Docker Hub publishing is paused while using Amazon ECR.
+  # push:
+  #   branches: [main]
+  # pull_request:
+  #   branches: [main]
   workflow_dispatch:
 
 permissions:

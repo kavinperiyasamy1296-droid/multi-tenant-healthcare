@@ -35,8 +35,16 @@ Open `http://localhost:8080`.
 
 ## Publish images with GitHub Actions
 
-Create Docker Hub repositories named `healthcare-backend` and `healthcare-frontend` under your account. In the GitHub repository, add the `USERNAME` repository variable and `TOKEN` repository secret under **Settings → Secrets and variables → Actions**. Set `USERNAME` to your Docker Hub username and `TOKEN` to a Docker Hub access token.
+The ECR workflow publishes `healthcare-backend` and `healthcare-frontend` to Amazon ECR on pushes to `main` and version tags such as `v1.0.0`. The `main` branch also updates the `latest` tag. The Docker Hub workflow is paused for automatic events and remains available only through manual dispatch.
 
-The workflow builds both images for pull requests without publishing. Pushes to `main` and version tags such as `v1.0.0` publish images to Docker Hub. The `main` branch also updates the `latest` tag. After publishing, Compose uses `DOCKERHUB_USERNAME/healthcare-backend` and `DOCKERHUB_USERNAME/healthcare-frontend`; set `DOCKERHUB_USERNAME` in the shell if the account differs from the default in `docker-compose.yml`.
+Before running the ECR workflow:
+
+1. Create ECR repositories named `healthcare-backend` and `healthcare-frontend` in your AWS region.
+2. Configure an AWS IAM OIDC provider for GitHub Actions and a role trusted by this GitHub repository's `main` branch. Grant it permission to push images to those ECR repositories.
+3. Add these repository variables under **GitHub Settings → Secrets and variables → Actions → Variables**:
+	- `AWS_REGION`: the AWS region containing the ECR repositories.
+	- `AWS_ROLE_TO_ASSUME`: the IAM role ARN for GitHub Actions.
+
+No long-lived AWS access key is stored in GitHub; the workflow assumes the IAM role using OIDC. Compose image references use `AWS_ACCOUNT_ID`, `AWS_REGION`, and `IMAGE_TAG`. For local builds, run `docker compose up --build`; for pulling ECR images, set those variables and authenticate Docker to ECR first.
 
 The tenant is identified by the `X-Tenant` header. Supported values are `tenant-a` and `tenant-b`. Tenant metadata is in the central database; patient records are stored in separate Tenant A and Tenant B databases.
