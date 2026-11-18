@@ -37,7 +37,6 @@ Open `http://localhost:8080`.
 
 Create Docker Hub repositories named `healthcare-backend` and `healthcare-frontend` under your account. In the GitHub repository, add these Actions repository secrets under **Settings → Secrets and variables → Actions**:
 
-- `DOCKERHUB_USERNAME`: your Docker Hub username
 - `DOCKERHUB_TOKEN`: a Docker Hub access token
 
 The workflow builds both images for pull requests without publishing. Pushes to `main` and version tags such as `v1.0.0` publish images to Docker Hub. The `main` branch also updates the `latest` tag. After publishing, Compose uses `DOCKERHUB_USERNAME/healthcare-backend` and `DOCKERHUB_USERNAME/healthcare-frontend`; set `DOCKERHUB_USERNAME` in the shell if the account differs from the default in `docker-compose.yml`.
