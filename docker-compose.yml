@@ -27,6 +27,7 @@ services:
       - tenant-b-data:/var/lib/postgresql/data
 
   backend:
+    image: ${DOCKERHUB_USERNAME:-kavinrajp}/healthcare-backend:${IMAGE_TAG:-latest}
     build: ./backend
     environment:
       POSTGRES_HOST: central-db
@@ -45,6 +46,7 @@ services:
       - tenant-b-db
 
   frontend:
+    image: ${DOCKERHUB_USERNAME:-kavinrajp}/healthcare-frontend:${IMAGE_TAG:-latest}
     build: ./frontend
 
   nginx:
