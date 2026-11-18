@@ -42,8 +42,9 @@ Before running the ECR workflow:
 1. Create ECR repositories named `healthcare-backend` and `healthcare-frontend` in your AWS region.
 2. Configure an AWS IAM OIDC provider for GitHub Actions and a role trusted by this GitHub repository's `main` branch. Grant it permission to push images to those ECR repositories.
 3. Add these repository variables under **GitHub Settings → Secrets and variables → Actions → Variables**:
-	- `AWS_REGION`: the AWS region containing the ECR repositories.
-	- `AWS_ROLE_TO_ASSUME`: the IAM role ARN for GitHub Actions.
+	- `AWSREGION`: the AWS region containing the ECR repositories.
+	- `AWS_ACCOUNT_ID`: the 12-digit AWS account ID that owns the role.
+	- `ASW_ROLE_1`: the IAM role name only, without an ARN or `role/` prefix.
 
 No long-lived AWS access key is stored in GitHub; the workflow assumes the IAM role using OIDC. Compose image references use `AWS_ACCOUNT_ID`, `AWS_REGION`, and `IMAGE_TAG`. For local builds, run `docker compose up --build`; for pulling ECR images, set those variables and authenticate Docker to ECR first.
 
